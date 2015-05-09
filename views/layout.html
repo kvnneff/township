@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <title>{{ site.title }}</title>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,900|Lora:400,400italic' rel='stylesheet' type='text/css'>
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/bundle.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1 class="site-title"><a href="/">
+        {{ site.title }}
+      </a></h1>
+      <ul id="header-nav">
+        {{#if account.admin }}
+        <li><a href="/accounts">Accounts</a></li>
+        {{/if}}
+        {{#if account.active }}
+        <li><a href="/accounts/sign-out">Sign out</a></li>
+        {{else}}
+        <li><a href="/accounts/new">Create an account</a></li>
+        <li><a href="/accounts/sign-in">Sign in</a></li>
+        {{/if}}
+      </ul>
+    </div>
+  </header>
+
+  <main role="main">
+    {{#block "body"}}{{/block}}
+  </main>
+
+  <hr>
+  <footer>
+    <div class="container">
+      <ul id="footer-nav">
+        {{#if account.active }}
+        <li><a href="/accounts/sign-out">Sign out</a></li>
+        {{else}}
+        <li><a href="/accounts/new">Create an account</a></li>
+        <li><a href="/accounts/sign-in">Sign in</a></li>
+        {{/if}}
+      </ul>
+    </div>
+  </footer>
+  
+</body>
+</html>

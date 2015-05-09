@@ -1,0 +1,31 @@
+{{#extend "layout"}}
+
+{{#content "body"}}
+
+<div class="container">
+  <h1>Create an account</h1>
+  <form action="/accounts" method="post">
+    <fieldset>
+      <label for="email">email</label> 
+      <input type="email" name="email" id="email" class="full-width">
+    </fieldset>
+    
+    <fieldset>
+      <label for="username">username</label> 
+      <input type="text" name="username" id="username" class="full-width">
+    </fieldset>
+    
+    <fieldset>
+      <label for="password">password</label> 
+      <input type="password" name="password" id="password" class="full-width">
+    </fieldset>
+    
+    <div class="form-actions">
+      <input type="submit" value="Create your account">
+    </div>
+  </form>
+</div>
+
+{{/content}}
+
+{{/extend}}
