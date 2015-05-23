@@ -5,13 +5,13 @@ var accounts = require('./accounts')
 
 
 /*
-* Replace WebAppClient with name of your app
+* Replace TownshipClient with name of your app
 */
 
-module.exports = WebAppClient
+module.exports = TownshipClient
 
-function WebAppClient (opts) {
-  if (!(this instanceof WebAppClient)) return new WebAppClient(opts)
+function TownshipClient (opts) {
+  if (!(this instanceof TownshipClient)) return new TownshipClient(opts)
 
   opts = opts || {}
 
@@ -26,7 +26,7 @@ function WebAppClient (opts) {
   this.accounts = accounts(this)
 }
 
-WebAppClient.prototype.request = function (method, path, params, cb) {
+TownshipClient.prototype.request = function (method, path, params, cb) {
   if (typeof params === 'function') {
     cb = params
     params = {}
@@ -54,16 +54,15 @@ WebAppClient.prototype.request = function (method, path, params, cb) {
   else request(opts, getResponse)
 
   function getResponse (error, response, body) {
-
     if (cb) {
       if (error) return cb(error)
-      if (response.statusCode >= 400) return cb({ error: response.statusCode })
+      if (response.statusCode >= 400) return cb({ error: { status: response.statusCode } })
       return cb(null, body)
     }
   }  
 }
 
-WebAppClient.prototype.fullUrl = function fullUrl (path, params) {
+TownshipClient.prototype.fullUrl = function fullUrl (path, params) {
   var url = this.host + '/api' + this.apiVersion + path + '/'
   if (params) url += '?' + params
   return url

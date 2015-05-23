@@ -8,14 +8,14 @@ var client = require('./index')({
 });
 
 
-test('create an account', function (t) {
-  var account = {
-    email: 'example@example.com',
-    username: 'example',
-    password: 'wat'
+test('create a post', function (t) {
+  var data = {
+    title: 'This is a post',
+    url: 'http://example.com/the-post',
+    account: 'example'
   };
 
-  client.accounts.create(account, function (err, res) {
+  client.posts.create(account, function (err, res) {
     t.ok(res);
     t.notOk(err);
     t.end();
@@ -23,20 +23,20 @@ test('create an account', function (t) {
 });
 
 
-test('update an account', function (t) {
-  var account = {
-    email: 'wat@example.com',
-    username: 'wat',
-    password: 'wat'
+test('update a post', function (t) {
+  var data = {
+    title: 'This is a post',
+    url: 'http://example.com/the-post',
+    account: 'example'
   };
 
   client.accounts.create(account, function (err, res) {
     t.ok(res);
     t.notOk(err);
-    res.email = 'wooo@example.com';
+    res.title = 'wooo';
     
-    client.accounts.update(res, function (err, updatedAccount) {
-      t.ok(res.email === 'wooo@example.com');
+    client.accounts.update(res, function (err, updated) {
+      t.ok(updated.title === 'wooo');
       t.end();
     });
 

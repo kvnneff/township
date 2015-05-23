@@ -18,6 +18,11 @@ Accounts.prototype.create = function (opts, cb) {
 }
 
 Accounts.prototype.update = function (username, opts, cb) {
+  if (typeof username === 'object') {
+    cb = opts
+    opts = username
+    username = opts.username
+  }
   return this.client.request('put', 'accounts/' + username, opts, cb)
 }
 

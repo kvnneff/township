@@ -10,7 +10,7 @@ module.exports = function (server) {
   var prefix = '/api/v1.0/accounts';
 
   server.router.on(prefix, function (req, res, opts) {
-    server.authorizeAPI(req, function (authError, authAccount){
+    server.authorize(req, res, function (authError, authAccount) {
       var notAuthorized = (authError || !authAccount);
 
       if (req.method === 'GET') {
@@ -31,19 +31,17 @@ module.exports = function (server) {
         if (notAuthorized) return response().status(401).json({ error: 'Not Authorized'}).pipe(res);
         
         jsonBody(req, res, function (err, body) {
-          
           var opts = {
             login: { basic: { username: body.username, password: body.password } },
             value: filter(body, '!password')
           }
           
-          server.accounts.create(body.username, opts, function (err) {          
+          server.accounts.create(body.username, opts, function (err) {
             if (err) return response().status(500).json({ error: 'Server error' }).pipe(res)
             
             server.accounts.get(body.username, function (err, account) {
               if (err) return response().status(500).json({ error: 'Server error' }).pipe(res)
-              
-              response().json(account).pipe(res)
+              return response().json(account).pipe(res)
             })
           })
         })
@@ -54,7 +52,7 @@ module.exports = function (server) {
   })
 
   server.router.on(prefix + '/:username', function (req, res, opts) {
-    server.authorizeAPI(req, function (authError, authAccount){
+    server.authorize(req, res, function (authError, authAccount) {
       var notAuthorized = (authError || !authAccount);
 
       if (req.method === 'GET') {
@@ -75,9 +73,9 @@ module.exports = function (server) {
         jsonBody(req, res, function (err, body) {
           server.accounts.get(opts.params.username, function (err, account) {
             account = extend(account, body)
+            
             server.accounts.put(opts.params.username, account, function (err) {
               if (err) return response().status(500).json({ error: 'Server error' }).pipe(res);
-              
               response().json(account).pipe(res)
             })
           })
