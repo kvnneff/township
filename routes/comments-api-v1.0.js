@@ -59,9 +59,9 @@ module.exports = function (server) {
       if (req.method === 'DELETE') {
         if (notAuthorized) return errorResponse(res, 401, 'Not Authorized')
 
-        server.comments.delete(opts.params.commentkey, function (err, res) {
+        server.comments.delete(opts.params.commentkey, function (err) {
           if (err) return errorResponse(res, 500, 'Server error')
-          return response().json(body).pipe(res)
+          return response().status(204).pipe(res)
         })
       }
     })

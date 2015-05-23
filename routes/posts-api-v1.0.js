@@ -61,9 +61,9 @@ module.exports = function (server) {
       if (req.method === 'DELETE') {
         if (notAuthorized) return errorResponse(res, 401, 'Not Authorized')
 
-        server.posts.delete(opts.params.key, function (err, res) {
+        server.posts.delete(opts.params.key, function (err) {
           if (err) return errorResponse(res, 500, 'Server error')
-          return response().json(body).pipe(res)
+          return response().status(204).pipe(res)
         })
       }
     })

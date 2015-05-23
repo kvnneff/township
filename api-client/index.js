@@ -1,8 +1,6 @@
 var qs = require('querystring')
 var request = require('request')
 
-var accounts = require('./accounts')
-
 
 /*
 * Replace TownshipClient with name of your app
@@ -23,7 +21,8 @@ function TownshipClient (opts) {
   this.host = opts.host || 'https://127.0.0.1:4243'
   this.apiVersion = opts.apiVersion || '/v1.0/'
 
-  this.accounts = accounts(this)
+  this.accounts = require('./accounts')(this)
+  this.activity = require('./activity')(this)
 }
 
 TownshipClient.prototype.request = function (method, path, params, cb) {
