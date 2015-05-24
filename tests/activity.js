@@ -117,7 +117,7 @@ test('create stream of comment updates', function (t) {
     })
 })
 
-test('teardown', function (t) {
+test('teardown activity', function (t) {
   activity.createReadStream()
     .on('data', function (data) {
       activity.delete(data.key, function (err) {

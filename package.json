@@ -10,7 +10,7 @@
   "scripts": {
     "bundle-css": "sheetify browser/style.css | cleancss > assets/bundle.css",
     "bundle": "npm run bundle-css",
-    "test": "node test/index.js | tap-spec",
+    "test": "tape tests/*.js | tap-spec",
     "start": "node example.js"
   },
   "browser": {

@@ -20,6 +20,20 @@ test('create a post', function (t) {
   })
 })
 
+test('create multiple posts', function (t) {
+  var data = require('./data/posts')
+
+  each(data, function (post, i, next) {
+    posts.create(post, function (err, action) {
+      t.notOk(err)
+      t.ok(post)
+      next()
+    })
+  }, function () {
+    t.end()
+  })
+})
+
 test('get a post', function (t) {
   var data = {
     title: 'This is a post',
@@ -80,18 +94,29 @@ test('delete a post', function (t) {
 })
 
 test('find post by account', function (t) {
+  var count = 0
   posts.find('account', 'test')
     .on('data', function (post) {
       t.ok(post)
+      count++
     })
     .on('end', function () {
+      t.ok(count, 3)
       t.end()
     })
 })
 
-test('posts have tags', function (t) {
-  t.notOk(true, 'make posts have tags')
-  t.end()
+test('get posts tagged as `cool`', function (t) {
+  var count = 0
+  posts.find('tags', 'cool')
+    .on('data', function (post) {
+      t.ok(post)
+      count++
+    })
+    .on('end', function () {
+      t.equals(count, 3)
+      t.end()
+    })
 })
 
 test('add comments to a post', function (t) {
@@ -176,7 +201,7 @@ test('find comments of a post', function (t) {
   })
 })
 
-test('teardown', function (t) {
+test('teardown posts', function (t) {
   posts.list(function (err, res) {
     each(res, function (item, i, done) {
       posts.delete(item.key, function () {
