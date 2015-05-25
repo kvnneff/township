@@ -86,7 +86,8 @@ module.exports = function (server) {
         if (notAuthorized) return response().status(401).json({ error: 'Not Authorized'}).pipe(res);
 
         server.accounts.remove(opts.params.username, function (err, account) {
-          response().json(account).pipe(res);
+          res.writeHead(204);
+          return res.end();
         });
       }
     });

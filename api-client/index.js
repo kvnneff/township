@@ -23,6 +23,9 @@ function TownshipClient (opts) {
 
   this.accounts = require('./accounts')(this)
   this.activity = require('./activity')(this)
+  this.profiles = require('./profiles')(this)
+  this.posts = require('./posts')(this)
+  this.comments = require('./comments')(this)
 }
 
 TownshipClient.prototype.request = function (method, path, params, cb) {
