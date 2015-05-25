@@ -15,11 +15,6 @@ var db = level(__dirname + '/db');
 
 var app = require('./lib/index')(db);
 
-app.router.on('/', function (req, res, opts) {
-  app.getAccountBySession(req, function (err, account, session) {
-    var html = app.render('index', { account: account });
-    response().html(html).pipe(res);
-  });
-});
+
 
 app.listen();

@@ -6,7 +6,7 @@
     <h1>Accounts</h1>
     
     <div class="actions header">
-      <a class="button small" href="/accounts/new"><i class="fa fa-plus"></i> create new account</a>
+      <a class="button button-grey small" href="/accounts/new"><i class="fa fa-plus"></i> create new account</a>
     </div>
     
     {{#each accounts}}
@@ -19,7 +19,7 @@
 
         <div class="list-item-actions">
           <form action="/accounts/delete/{{ key }}" method="post">
-            <button type="submit" class="destroy-sheet small">
+            <button type="submit" class="destroy-sheet button-red small">
               <i class="fa fa-trash-o"></i> destroy
             </button>
           </form>
