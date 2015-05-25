@@ -23,7 +23,6 @@
     "accountdown-basic": "^1.0.0",
     "basscss-grid": "^1.0.2",
     "body": "^4.5.0",
-    "clean-css": "^3.1.8",
     "clone": "^1.0.2",
     "colors.css": "^2.3.0",
     "cookie-auth": "^2.4.1",
@@ -48,7 +47,6 @@
     "moment": "^2.9.0",
     "normalize.css": "^3.0.2",
     "response": "git://github.com/mikeal/response",
-    "sheetify": "^2.0.0",
     "slug": "^0.8.0",
     "smokestack": "^3.2.2",
     "sqldown": "^1.2.0",
@@ -59,8 +57,14 @@
     "xhr": "^2.0.1"
   },
   "devDependencies": {
+    "brfs": "^1.4.0",
+    "browserify": "^10.2.1",
+    "clean-css": "^3.2.10",
+    "cssnext": "^1.5.1",
     "request": "^2.53.0",
+    "sheetify": "^2.0.0",
     "tap-spec": "^3.0.0",
-    "tape": "^4.0.0"
+    "tape": "^4.0.0",
+    "watchify": "^3.2.1"
   }
 }

@@ -9,6 +9,7 @@ var profiles = require('../lib/profiles')(db)
 test('create a profile', function (t) {
   var data = {
     account: '1',
+    username: 'test',
     email: 'test@example.com'
   }
 
