@@ -1,13 +1,12 @@
-var levelup = require('level');
-var db = levelup(__dirname + '/../db');
-var app = require('../lib/index')(db, { site: { title: 'weeee' } });
+module.exports = function (app, cmd, options) {
+  var key = cuid()
+  var data = {
+    login: { basic: { uuid: key, password: process.argv[4] } },
+    value: { email: process.argv[3], username: process.argv[2] }
+  }
 
-var opts = {
-  login: { basic: { username: 'pizza', password: 'pizza' } },
-  value: { email: 'pizza@example.com', username: 'pizza', admin: true }
-};
-
-app.accounts.create(opts.value.username, opts, function (err) {
-  console.log(err)
-});
-
+  app.accounts.create(key, data, function (err) {
+    if (err) return console.log ('error creating account\n', err)
+    console.log('account created for', username)
+  })
+}

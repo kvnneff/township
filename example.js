@@ -9,7 +9,6 @@
 * instead of manually pulling and merging changes via git.
 */
 
-var response = require('response');
 var level = require('level');
 var db = level(__dirname + '/db');
 
