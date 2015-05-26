@@ -15,13 +15,13 @@ module.exports = function (server) {
 
       if (req.method === 'GET') {
         if (notAuthorized) {
-          server.accounts.list({ keys: false })
+          server.accounts.list()
             .pipe(filterAccountDetails())
             .pipe(JSONStream.stringify())
             .pipe(res);
         }
         else {
-          server.accounts.list({ keys: false })
+          server.accounts.list()
             .pipe(JSONStream.stringify())
             .pipe(res);
         }
@@ -29,7 +29,7 @@ module.exports = function (server) {
 
       else if (req.method === 'POST') {
         if (notAuthorized) return response().status(401).json({ error: 'Not Authorized'}).pipe(res);
-        
+
         jsonBody(req, res, function (err, body) {
           var opts = {
             login: { basic: { username: body.username, password: body.password } },
@@ -96,7 +96,7 @@ module.exports = function (server) {
 
 function filterAccountDetails () {
   return through.obj(function iterator (chunk, enc, next) {
-    this.push(filter(chunk, ['*', '!email', '!admin']));
+    this.push(filter(chunk, ['*', '!value.email', '!value.admin']));
     next();
   });
 }

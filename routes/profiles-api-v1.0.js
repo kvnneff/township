@@ -11,21 +11,24 @@ var errorResponse = require('../lib/error-response')
 module.exports = function (server) {
   var prefix = '/api/v1.0/';
 
-  server.router.on(prefix + '/profiles/', function (req, res, opts) {
+  server.router.on(prefix + '/profiles', function (req, res, opts) {
     server.authorize(req, res, function (authError, authAccount) {
       var notAuthorized = (authError || !authAccount)
-
+      console.log('authorized?', authError, authAccount)
       if (req.method === 'GET') {
         server.profiles.createReadStream()
+          .on('data', console.log)
           .pipe(JSONStream.stringify())
           .pipe(res)
       }
 
       if (req.method === 'POST') {
+        console.log('posting?')
         if (notAuthorized) return errorResponse(res, 401, 'Not Authorized')
 
         jsonBody(req, res, function (err, body) {
           server.profiles.create(body, function (err, profile) {
+            console.log('after create', profile)
             if (err) return errorResponse(res, 500, 'Server error')
             return response().json(profile).pipe(res)
           })

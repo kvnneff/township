@@ -14,7 +14,7 @@ test('create an activity', function (t) {
     account: 'test',
     message: 'oooh, i am actively creating a post.',
   }
-  
+
   activity.put(data, function (err, action) {
     t.notOk(err)
     t.ok(action)
@@ -24,7 +24,7 @@ test('create an activity', function (t) {
 
 test('create sample activity data', function (t) {
   var data = require('./data/activity')
-  
+
   each(data, function (action, i, next) {
     activity.put(action, function (err, action) {
       t.notOk(err)
@@ -91,11 +91,9 @@ test('create simple find stream', function (t) {
 
 test('create complex filter stream', function (t) {
   var count = 0
-  var all = []
   activity.createFilterStream({ resource: ['post'], resourceKey: ['2'] })
     .on('data', function (data) {
       t.ok(data)
-      all.push(data)
       count++
     })
     .on('end', function () {
