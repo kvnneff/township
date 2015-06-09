@@ -1,19 +1,19 @@
-var qs = require('querystring');
-var response = require('response');
-var JSONStream = require('JSONStream');
-var jsonBody = require('body/json');
-var through = require('through2');
-var filter = require('filter-object');
-var extend = require('extend');
+var qs = require('querystring')
+var response = require('response')
+var JSONStream = require('JSONStream')
+var jsonBody = require('body/json')
+var through = require('through2')
+var filter = require('filter-object')
+var extend = require('extend')
 
 var errorResponse = require('../lib/error-response')
 
 module.exports = function (server) {
-  var prefix = '/api/v1.0/';
+  var prefix = '/api/v1.0/'
 
   server.router.on(prefix + '/activity', function (req, res, options) {
     server.authorize(req, res, function (authError, authAccount) {
-      var notAuthorized = (authError || !authAccount);
+      var notAuthorized = (authError || !authAccount)
 
       if (req.method === 'GET') {
         if (options.query) {
@@ -42,7 +42,7 @@ module.exports = function (server) {
 
   server.router.on(prefix + '/activity/:key', function (req, res, options) {
     server.authorize(req, res, function (authError, authAccount) {
-      var notAuthorized = (authError || !authAccount);
+      var notAuthorized = (authError || !authAccount)
 
       if (req.method === 'GET') {
         server.activity.get(options.params.key, function (err, action) {
@@ -55,8 +55,8 @@ module.exports = function (server) {
         if (notAuthorized) return errorResponse(res, 401, 'Not authorized')
         server.activity.delete(options.params.key, function (err) {
           if (err) return errorResponse(res, 500, 'Server error')
-          res.writeHead(204);
-          return res.end();
+          res.writeHead(204)
+          return res.end()
         })
       }
     })

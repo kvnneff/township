@@ -65,8 +65,8 @@ module.exports = function (server) {
 
         server.comments.delete(options.params.key, function (err) {
           if (err) return errorResponse(res, 500, 'Server error')
-          res.writeHead(204);
-          return res.end();
+          res.writeHead(204)
+          return res.end()
         })
       }
     })

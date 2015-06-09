@@ -9,8 +9,8 @@
 * instead of manually pulling and merging changes via git.
 */
 
-var level = require('level');
-var db = level(__dirname + '/db');
+var level = require('level')
+var db = level(__dirname + '/db')
 
-var app = require('./lib/index')(db);
-app.listen();
+var app = require('./lib/index')(db)
+app.listen()

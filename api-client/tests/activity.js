@@ -5,7 +5,7 @@ var client = require('../index')({
   host: 'http://127.0.0.1:4243',
   username: 'pizza',
   password: 'pizza'
-});
+})
 
 test('create an activity', function (t) {
   var data = {
@@ -127,8 +127,8 @@ test('teardown', function (t) {
     function iterator (item, i, done) {
       client.activity.delete(item.key, function (err) {
         t.notOk(err, 'no error when deleting activity')
-        done();
-      });
+        done()
+      })
     }
     
     function end () {

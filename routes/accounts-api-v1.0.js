@@ -1,34 +1,34 @@
-var qs = require('querystring');
-var response = require('response');
-var JSONStream = require('JSONStream');
-var jsonBody = require('body/json');
-var through = require('through2');
-var filter = require('filter-object');
-var extend = require('extend');
+var qs = require('querystring')
+var response = require('response')
+var JSONStream = require('JSONStream')
+var jsonBody = require('body/json')
+var through = require('through2')
+var filter = require('filter-object')
+var extend = require('extend')
 
 module.exports = function (server) {
-  var prefix = '/api/v1.0/accounts';
+  var prefix = '/api/v1.0/accounts'
 
   server.router.on(prefix, function (req, res, options) {
     server.authorize(req, res, function (authError, authAccount) {
-      var notAuthorized = (authError || !authAccount);
+      var notAuthorized = (authError || !authAccount)
 
       if (req.method === 'GET') {
         if (notAuthorized) {
           server.accounts.list()
             .pipe(filterAccountDetails())
             .pipe(JSONStream.stringify())
-            .pipe(res);
+            .pipe(res)
         }
         else {
           server.accounts.list()
             .pipe(JSONStream.stringify())
-            .pipe(res);
+            .pipe(res)
         }
       }
 
       else if (req.method === 'POST') {
-        if (notAuthorized) return response().status(401).json({ error: 'Not Authorized'}).pipe(res);
+        if (notAuthorized) return response().status(401).json({ error: 'Not Authorized'}).pipe(res)
 
         jsonBody(req, res, function (err, body) {
           var options = {
@@ -53,29 +53,29 @@ module.exports = function (server) {
 
   server.router.on(prefix + '/:username', function (req, res, options) {
     server.authorize(req, res, function (authError, authAccount) {
-      var notAuthorized = (authError || !authAccount);
+      var notAuthorized = (authError || !authAccount)
 
       if (req.method === 'GET') {
         server.accounts.get(options.params.username, function (err, account) {
-          if (err) return response().status(500).json({ error: 'Server error' }).pipe(res);
+          if (err) return response().status(500).json({ error: 'Server error' }).pipe(res)
           if (notAuthorized) {
-            account = filter(account, ['*', '!email', '!admin']);
-            return response().json(account).pipe(res);
+            account = filter(account, ['*', '!email', '!admin'])
+            return response().json(account).pipe(res)
           }
           
-          return response().json(account).pipe(res);
-        });
+          return response().json(account).pipe(res)
+        })
       }
 
       else if (req.method === 'PUT') {
-        if (notAuthorized) return response().status(401).json({ error: 'Not Authorized'}).pipe(res);
+        if (notAuthorized) return response().status(401).json({ error: 'Not Authorized'}).pipe(res)
 
         jsonBody(req, res, function (err, body) {
           server.accounts.get(options.params.username, function (err, account) {
             account = extend(account, body)
             
             server.accounts.put(options.params.username, account, function (err) {
-              if (err) return response().status(500).json({ error: 'Server error' }).pipe(res);
+              if (err) return response().status(500).json({ error: 'Server error' }).pipe(res)
               response().json(account).pipe(res)
             })
           })
@@ -83,20 +83,20 @@ module.exports = function (server) {
       }
 
       else if (req.method === 'DELETE') {
-        if (notAuthorized) return response().status(401).json({ error: 'Not Authorized'}).pipe(res);
+        if (notAuthorized) return response().status(401).json({ error: 'Not Authorized'}).pipe(res)
 
         server.accounts.remove(options.params.username, function (err, account) {
-          res.writeHead(204);
-          return res.end();
-        });
+          res.writeHead(204)
+          return res.end()
+        })
       }
-    });
-  });
+    })
+  })
 }
 
 function filterAccountDetails () {
   return through.obj(function iterator (chunk, enc, next) {
-    this.push(filter(chunk, ['*', '!value.email', '!value.admin']));
-    next();
-  });
+    this.push(filter(chunk, ['*', '!value.email', '!value.admin']))
+    next()
+  })
 }
