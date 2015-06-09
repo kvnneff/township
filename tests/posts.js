@@ -1,8 +1,8 @@
 var test = require('tape')
 var each = require('each-async')
 
-var levelup = require('level')
-var db = levelup('./tmp/db-posts')
+var levelup = require('levelup')
+var db = levelup('db', { db: require('memdown') })
 
 var posts = require('../lib/posts')(db)
 
@@ -202,14 +202,14 @@ test('find comments of a post', function (t) {
 })
 
 test('teardown posts', function (t) {
-  posts.list(function (err, res) {
-    each(res, function (item, i, done) {
-      posts.delete(item.key, function () {
-        done()
+  posts.createReadStream()
+    .on('data', function (data) {
+      posts.delete(data.key, function (err) {
+        t.notOk(err)
       })
-    }, function (error) {
+    })
+    .on('end', function () {
       db.close()
       t.end()
     })
-  })
 })

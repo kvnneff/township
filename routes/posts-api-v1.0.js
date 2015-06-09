@@ -11,7 +11,7 @@ var errorResponse = require('../lib/error-response')
 module.exports = function (server) {
   var prefix = '/api/v1.0/';
 
-  server.router.on(prefix + '/posts/', function (req, res, opts) {
+  server.router.on(prefix + '/posts/', function (req, res, options) {
     server.authorize(req, res, function (authError, authAccount) {
       var notAuthorized = (authError || !authAccount);
 
@@ -34,12 +34,12 @@ module.exports = function (server) {
     })
   })
 
-  server.router.on(prefix + '/posts/:key', function (req, res, opts) {
+  server.router.on(prefix + '/posts/:key', function (req, res, options) {
     server.authorize(req, res, function (authError, authAccount) {
       var notAuthorized = (authError || !authAccount);
 
       if (req.method === 'GET') {
-        server.posts.get(opts.params.key, function (err, post) {
+        server.posts.get(options.params.key, function (err, post) {
           if (err) return errorResponse(res, 500, 'Server error')
 
           return response().json(post).pipe(res)
@@ -50,7 +50,7 @@ module.exports = function (server) {
         if (notAuthorized) return errorResponse(res, 401, 'Not Authorized')
 
         jsonBody(req, res, function (err, body) {
-          server.posts.update(opts.params.key, body, function (err, post) {
+          server.posts.update(options.params.key, body, function (err, post) {
             if (err) return errorResponse(res, 500, 'Server error')
             return response().json(post).pipe(res)
           })
@@ -60,7 +60,7 @@ module.exports = function (server) {
       if (req.method === 'DELETE') {
         if (notAuthorized) return errorResponse(res, 401, 'Not Authorized')
 
-        server.posts.delete(opts.params.key, function (err) {
+        server.posts.delete(options.params.key, function (err) {
           if (err) return errorResponse(res, 500, 'Server error')
           res.writeHead(204);
           return res.end();

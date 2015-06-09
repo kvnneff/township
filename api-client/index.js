@@ -8,18 +8,18 @@ var request = require('request')
 
 module.exports = TownshipClient
 
-function TownshipClient (opts) {
-  if (!(this instanceof TownshipClient)) return new TownshipClient(opts)
+function TownshipClient (options) {
+  if (!(this instanceof TownshipClient)) return new TownshipClient(options)
 
-  opts = opts || {}
+  options = options || {}
 
   this.account = {
-    username: opts.username,
-    password: opts.password
+    username: options.username,
+    password: options.password
   }
 
-  this.host = opts.host || 'https://127.0.0.1:4243'
-  this.apiVersion = opts.apiVersion || '/v1.0/'
+  this.host = options.host || 'https://127.0.0.1:4243'
+  this.apiVersion = options.apiVersion || '/v1.0/'
 
   this.accounts = require('./accounts')(this)
   this.activity = require('./activity')(this)
@@ -34,26 +34,26 @@ TownshipClient.prototype.request = function (method, path, params, cb) {
     params = {}
   }
   
-  var opts = {}
+  var options = {}
 
   if (method === 'get') {
     params = qs.stringify(params)
-    opts.uri = this.fullUrl(path, params)
+    options.uri = this.fullUrl(path, params)
   }
 
   else {
-    opts.uri = this.fullUrl(path)
-    opts.body = params
+    options.uri = this.fullUrl(path)
+    options.body = params
   }
 
-  opts.json = true
-  opts.method = method
-  opts.headers = {
+  options.json = true
+  options.method = method
+  options.headers = {
     'Authorization': this.account.username + ':' + this.account.password
   }
 
-  if (typeof cb === 'undefined') return request(opts)
-  else request(opts, getResponse)
+  if (typeof cb === 'undefined') return request(options)
+  else request(options, getResponse)
 
   function getResponse (error, response, body) {
     if (cb) {

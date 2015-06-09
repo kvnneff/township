@@ -1,8 +1,8 @@
 var test = require('tape')
 var each = require('each-async')
 
-var levelup = require('level')
-var db = levelup('./tmp/db-comments')
+var levelup = require('levelup')
+var db = levelup('db', { db: require('memdown') })
 
 var profiles = require('../lib/profiles')(db)
 

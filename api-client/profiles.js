@@ -5,25 +5,25 @@ function Profiles (client) {
   this.client = client
 }
 
-Profiles.prototype.get = function (key, opts, cb) {
-  return this.client.request('get', 'profiles/' + key, opts, cb)
+Profiles.prototype.get = function (key, options, cb) {
+  return this.client.request('get', 'profiles/' + key, options, cb)
 }
 
-Profiles.prototype.list = function (opts, cb) {
-  return this.client.request('get', 'profiles', opts, cb)
+Profiles.prototype.list = function (options, cb) {
+  return this.client.request('get', 'profiles', options, cb)
 }
 
-Profiles.prototype.create = function (opts, cb) {
-  return this.client.request('post', 'profiles', opts, cb)
+Profiles.prototype.create = function (options, cb) {
+  return this.client.request('post', 'profiles', options, cb)
 }
 
-Profiles.prototype.update = function (key, opts, cb) {
+Profiles.prototype.update = function (key, options, cb) {
   if (typeof key === 'object') {
-    cb = opts
-    opts = key
-    key = opts.key
+    cb = options
+    options = key
+    key = options.key
   }
-  return this.client.request('put', 'profiles/' + key, opts, cb)
+  return this.client.request('put', 'profiles/' + key, options, cb)
 }
 
 Profiles.prototype.delete = function (key, cb) {

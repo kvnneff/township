@@ -5,16 +5,16 @@ function Activity (client) {
   this.client = client
 }
 
-Activity.prototype.get = function (key, opts, cb) {
-  return this.client.request('get', 'activity/' + key, opts, cb)
+Activity.prototype.get = function (key, options, cb) {
+  return this.client.request('get', 'activity/' + key, options, cb)
 }
 
-Activity.prototype.list = function (opts, cb) {
-  return this.client.request('get', 'activity', opts, cb)
+Activity.prototype.list = function (options, cb) {
+  return this.client.request('get', 'activity', options, cb)
 }
 
-Activity.prototype.put = function (opts, cb) {
-  return this.client.request('post', 'activity', opts, cb)
+Activity.prototype.put = function (options, cb) {
+  return this.client.request('post', 'activity', options, cb)
 }
 
 Activity.prototype.delete = function (key, cb) {

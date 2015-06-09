@@ -7,7 +7,7 @@ var redirect = require('../lib/redirect');
 module.exports = function routes (server) {
   var prefix = '/accounts';
   
-  server.router.on(prefix, function (req, res, opts) {
+  server.router.on(prefix, function (req, res, options) {
     server.authorizeAPI
       if (req.method === 'GET') {
         server.authorizeSession(req, res, function (error, account, session) {
@@ -35,12 +35,12 @@ module.exports = function routes (server) {
     
     if (req.method === 'POST') {
       formBody(req, res, function (err, body) {
-        var opts = {
+        var options = {
           login: { basic: { username: body.username, password: body.password } },
           value: { email: body.email, username: body.username }
         };
 
-        server.accounts.create(body.username, opts, function (err) {          
+        server.accounts.create(body.username, options, function (err) {          
           if (err) {
             console.error(err);
             redirect(res, '/');
@@ -55,7 +55,7 @@ module.exports = function routes (server) {
     }
   });
 
-  server.router.on(prefix + '/new', function (req, res, opts) {
+  server.router.on(prefix + '/new', function (req, res, options) {
     server.getAccountBySession(req, function (err, account, session) {
       if (!err && !account.admin) return redirect(res, '/');
 
@@ -66,26 +66,26 @@ module.exports = function routes (server) {
     });
   });
 
-  server.router.on(prefix + '/update/:username', function (req, res, opts) {
+  server.router.on(prefix + '/update/:username', function (req, res, options) {
     server.getAccountBySession(req, function (err, account, session) {
       if (err) return console.error(error)
 
       if (account.admin) {
         if (req.method === 'POST') {
-          updateAccountFromForm(req, res, opts.params);
+          updateAccountFromForm(req, res, options.params);
           return redirect(res, prefix);
         }
-        if (req.method === 'GET') renderAccountUpdateForm(res, opts.params.username, account);
+        if (req.method === 'GET') renderAccountUpdateForm(res, options.params.username, account);
       } else {
-        if (res.account.key !== opts.params.username) return console.log("You must be admin to update an account which is not yours");
-        if (req.method === 'POST' ) updateAccountFromForm(req, res, opts.params);
-        if (req.method === 'GET') renderAccountUpdateForm(res, opts.params.username, account);
+        if (res.account.key !== options.params.username) return console.log("You must be admin to update an account which is not yours");
+        if (req.method === 'POST' ) updateAccountFromForm(req, res, options.params);
+        if (req.method === 'GET') renderAccountUpdateForm(res, options.params.username, account);
         return redirect(res, '/');
       }
     });
   });
 
-  server.router.on(prefix + '/sign-in', function (req, res, opts) {    
+  server.router.on(prefix + '/sign-in', function (req, res, options) {    
     server.getAccountBySession(req, function (err, account, session) {
       if (!err) return redirect(res, '/');
 
@@ -113,7 +113,7 @@ module.exports = function routes (server) {
     });
   });
 
-  server.router.on(prefix + '/sign-out', function (req, res, opts) {
+  server.router.on(prefix + '/sign-out', function (req, res, options) {
     server.auth.delete(req, function () {
       server.auth.cookie.destroy(res);
       redirect(res, '/');
@@ -125,19 +125,19 @@ module.exports = function routes (server) {
   * Helper functions for managing accounts
   */
   
-  function createAccount(opts) {
-    server.accounts.create(opts.login.basic.username, opts, logIfError);
+  function createAccount(options) {
+    server.accounts.create(options.login.basic.username, options, logIfError);
   }
 
-  function updateAccount(opts) {
-    var username = opts.login.basic.username;
+  function updateAccount(options) {
+    var username = options.login.basic.username;
     server.accounts.get(username, function (err, value) {
       for (var key in value) { // Add existing features from the original value
-        if (value.hasOwnProperty(key) && !opts.value.hasOwnProperty(key)) {
-          opts.value[key] = value[key];
+        if (value.hasOwnProperty(key) && !options.value.hasOwnProperty(key)) {
+          options.value[key] = value[key];
         }
       }
-      server.accounts.put(username, opts.value, logIfError);
+      server.accounts.put(username, options.value, logIfError);
     });
   }
 
@@ -157,7 +157,7 @@ module.exports = function routes (server) {
   function modifyAccountFromForm(err, body, username, accountOperation) {
     body.admin = !!body.admin; // ie 'true' => true
 
-    var opts = {
+    var options = {
       login: {
         basic: {
           username: username,
@@ -171,7 +171,7 @@ module.exports = function routes (server) {
       }
     };
 
-    accountOperation(opts);
+    accountOperation(options);
   }
 
   function logIfError(err) {

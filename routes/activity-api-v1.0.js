@@ -11,13 +11,13 @@ var errorResponse = require('../lib/error-response')
 module.exports = function (server) {
   var prefix = '/api/v1.0/';
 
-  server.router.on(prefix + '/activity', function (req, res, opts) {
+  server.router.on(prefix + '/activity', function (req, res, options) {
     server.authorize(req, res, function (authError, authAccount) {
       var notAuthorized = (authError || !authAccount);
 
       if (req.method === 'GET') {
-        if (opts.query) {
-          return server.activity.createFilterStream(opts.query)
+        if (options.query) {
+          return server.activity.createFilterStream(options.query)
             .pipe(JSONStream.stringify())
             .pipe(res)
         }
@@ -40,12 +40,12 @@ module.exports = function (server) {
     })
   })
 
-  server.router.on(prefix + '/activity/:key', function (req, res, opts) {
+  server.router.on(prefix + '/activity/:key', function (req, res, options) {
     server.authorize(req, res, function (authError, authAccount) {
       var notAuthorized = (authError || !authAccount);
 
       if (req.method === 'GET') {
-        server.activity.get(opts.params.key, function (err, action) {
+        server.activity.get(options.params.key, function (err, action) {
           if (err || !action) return errorResponse(res, 404, 'Not found')
           response().json(action).pipe(res)
         })
@@ -53,7 +53,7 @@ module.exports = function (server) {
 
       if (req.method === 'DELETE') {
         if (notAuthorized) return errorResponse(res, 401, 'Not authorized')
-        server.activity.delete(opts.params.key, function (err) {
+        server.activity.delete(options.params.key, function (err) {
           if (err) return errorResponse(res, 500, 'Server error')
           res.writeHead(204);
           return res.end();

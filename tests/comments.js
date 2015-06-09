@@ -1,8 +1,8 @@
 var test = require('tape')
 var each = require('each-async')
 
-var levelup = require('level')
-var db = levelup('./tmp/db-comments')
+var levelup = require('levelup')
+var db = levelup('db', { db: require('memdown') })
 
 var comments = require('../lib/comments')(db)
 
@@ -80,14 +80,14 @@ test('delete a comment', function (t) {
 })
 
 test('teardown', function (t) {
-  comments.list(function (err, res) {
-    each(res, function (item, i, done) {
-      comments.delete(item.key, function () {
-        done()
+  comments.createReadStream()
+    .on('data', function (data) {
+      comments.delete(data.key, function (err) {
+        t.notOk(err)
       })
-    }, function (error) {
+    })
+    .on('end', function () {
       db.close()
       t.end()
     })
-  })
 })

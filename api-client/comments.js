@@ -5,25 +5,25 @@ function Comments (client) {
   this.client = client
 }
 
-Comments.prototype.get = function (key, opts, cb) {
-  return this.client.request('get', 'comments/' + key, opts, cb)
+Comments.prototype.get = function (key, options, cb) {
+  return this.client.request('get', 'comments/' + key, options, cb)
 }
 
-Comments.prototype.list = function (opts, cb) {
-  return this.client.request('get', 'comments', opts, cb)
+Comments.prototype.list = function (options, cb) {
+  return this.client.request('get', 'comments', options, cb)
 }
 
-Comments.prototype.create = function (opts, cb) {
-  return this.client.request('post', 'comments', opts, cb)
+Comments.prototype.create = function (options, cb) {
+  return this.client.request('post', 'comments', options, cb)
 }
 
-Comments.prototype.update = function (key, opts, cb) {
+Comments.prototype.update = function (key, options, cb) {
   if (typeof key === 'object') {
-    cb = opts
-    opts = key
-    key = opts.key
+    cb = options
+    options = key
+    key = options.key
   }
-  return this.client.request('put', 'comments/' + key, opts, cb)
+  return this.client.request('put', 'comments/' + key, options, cb)
 }
 
 Comments.prototype.delete = function (key, cb) {

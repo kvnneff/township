@@ -1,5 +1,5 @@
 /*
-app.router.on('/', function (req, res, opts) {
+app.router.on('/', function (req, res, options) {
   app.getAccountBySession(req, function (err, account, session) {
     var html = app.render('index', { account: account });
     response().html(html).pipe(res);
@@ -12,7 +12,7 @@ var JSONStream = require('JSONStream');
 var redirect = require('../lib/redirect');
 
 module.exports = function routes (server) {
-  server.router.on('/', function (req, res, opts) {
+  server.router.on('/', function (req, res, options) {
     if (req.method === 'GET') {
       server.authorizeSession(req, res, function (error, account, session) {
 

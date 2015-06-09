@@ -12,13 +12,13 @@ var errorResponse = require('../lib/error-response')
 module.exports = function (server) {
   var prefix = '/api/v1.0/'
 
-  server.router.on(prefix + '/comments', function (req, res, opts) {
-    console.log(opts)
+  server.router.on(prefix + '/comments', function (req, res, options) {
+    console.log(options)
     server.authorize(req, res, function (authError, authAccount) {
       var notAuthorized = (authError || !authAccount)
 
       if (req.method === 'GET') {
-        server.comments.find('post', opts.params.postkey)
+        server.comments.find('post', options.params.postkey)
           .pipe(JSONStream.stringify())
           .pipe(res)
       }
@@ -36,13 +36,13 @@ module.exports = function (server) {
     })
   })
 
-  server.router.on(prefix + '/comments/:key', function (req, res, opts) {
-    console.log(opts)
+  server.router.on(prefix + '/comments/:key', function (req, res, options) {
+    console.log(options)
     server.authorize(req, res, function (authError, authAccount) {
       var notAuthorized = (authError || !authAccount)
 
       if (req.method === 'GET') {
-        server.comments.get(opts.params.key, function (err, comment) {
+        server.comments.get(options.params.key, function (err, comment) {
           if (err) return errorResponse(res, 500, 'Server error')
 
           return response().json(comment).pipe(res)
@@ -53,7 +53,7 @@ module.exports = function (server) {
         if (notAuthorized) return errorResponse(res, 401, 'Not Authorized')
 
         jsonBody(req, res, function (err, body) {
-          server.comments.update(opts.params.key, body, function (err, comment) {
+          server.comments.update(options.params.key, body, function (err, comment) {
             if (err) return errorResponse(res, 500, 'Server error')
             return response().json(comment).pipe(res)
           })
@@ -63,7 +63,7 @@ module.exports = function (server) {
       if (req.method === 'DELETE') {
         if (notAuthorized) return errorResponse(res, 401, 'Not Authorized')
 
-        server.comments.delete(opts.params.key, function (err) {
+        server.comments.delete(options.params.key, function (err) {
           if (err) return errorResponse(res, 500, 'Server error')
           res.writeHead(204);
           return res.end();
