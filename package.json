@@ -51,6 +51,7 @@
     "moment": "^2.9.0",
     "normalize.css": "^3.0.2",
     "response": "git://github.com/mikeal/response",
+    "send-data": "^7.0.0",
     "slug": "^0.8.0",
     "smokestack": "^3.2.2",
     "sqldown": "^1.2.0",
