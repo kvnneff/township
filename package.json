@@ -40,7 +40,7 @@
     "isarray": "0.0.1",
     "json-format-stream": "^1.1.0",
     "level": "^0.18.0",
-    "level-model": "^1.2.1",
+    "level-model": "^1.2.3",
     "level-party": "^2.1.1",
     "levelup": "^0.19.0",
     "marked": "^0.3.3",

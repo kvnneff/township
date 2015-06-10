@@ -14,8 +14,7 @@ function Example (db, options) {
       content: { type: 'string' },
       tags: { type: 'array' }
     },
-    indexKeys: ['tags'],
-    required: []
+    indexKeys: ['tags']
   })
 
   Model.call(this, db, options)
