@@ -5,6 +5,7 @@ module.exports = function (db, options) {
 
   return {
     name: 'comments',
+    schema: model.schema,
     model: model,
     handler: handler,
     routes: routes,

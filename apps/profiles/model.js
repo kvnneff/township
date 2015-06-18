@@ -1,7 +1,7 @@
 var Model = require('level-model')
 var inherits = require('inherits')
 var extend = require('extend')
-var comments = require('./comments')
+var comments = require('../comments/model')
 
 module.exports = Profiles
 inherits(Profiles, Model)

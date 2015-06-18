@@ -6,60 +6,49 @@ var through = require('through2')
 var filter = require('filter-object')
 var extend = require('extend')
 
-var errorResponse = require('../lib/error-response')
+var errorResponse = require('../../lib/error-response')
 
-module.exports = function (model, options) {
+module.exports = function (activity, options) {
   var handler = {}
 
   handler.index = function (req, res, options) {
-    server.authorize(req, res, function (authError, authAccount) {
-      var notAuthorized = (authError || !authAccount)
-
-      if (req.method === 'GET') {
-        if (options.query) {
-          return server.activity.createFilterStream(options.query)
-            .pipe(JSONStream.stringify())
-            .pipe(res)
-        }
-        
-        return server.activity.createReadStream()
+    if (req.method === 'GET') {
+      if (options.query) {
+        return activity.createFilterStream(options.query)
           .pipe(JSONStream.stringify())
           .pipe(res)
       }
+      
+      return activity.createReadStream()
+        .pipe(JSONStream.stringify())
+        .pipe(res)
+    }
 
-      if (req.method === 'POST') {
-        if (notAuthorized) return errorResponse(res, 401, 'Not authorized')
-        
-        jsonBody(req, function (err, data) {
-          server.activity.put(data, function (err, action) {
-            if (err) return errorResponse(res, 500, 'Server error')
-            response().json(action).pipe(res)
-          })
+    if (req.method === 'POST') {
+      jsonBody(req, function (err, data) {
+        activity.put(data, function (err, action) {
+          if (err) return errorResponse(res, 400, 'Error creating activity')
+          response().json(action).pipe(res)
         })
-      }
-    })
+      })
+    }
   }
 
   handler.item = function (req, res, options) {
-    server.authorize(req, res, function (authError, authAccount) {
-      var notAuthorized = (authError || !authAccount)
+    if (req.method === 'GET') {
+      activity.get(options.params.key, function (err, action) {
+        if (err || !action) return errorResponse(res, 404, 'Not found')
+        response().json(action).pipe(res)
+      })
+    }
 
-      if (req.method === 'GET') {
-        server.activity.get(options.params.key, function (err, action) {
-          if (err || !action) return errorResponse(res, 404, 'Not found')
-          response().json(action).pipe(res)
-        })
-      }
-
-      if (req.method === 'DELETE') {
-        if (notAuthorized) return errorResponse(res, 401, 'Not authorized')
-        server.activity.delete(options.params.key, function (err) {
-          if (err) return errorResponse(res, 500, 'Server error')
-          res.writeHead(204)
-          return res.end()
-        })
-      }
-    })
+    if (req.method === 'DELETE') {
+      activity.delete(options.params.key, function (err) {
+        if (err) return errorResponse(res, 400, 'Error creating activity')
+        res.writeHead(204)
+        return res.end()
+      })
+    }
   }
 
   return handler

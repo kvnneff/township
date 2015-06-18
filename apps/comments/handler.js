@@ -7,67 +7,53 @@ var through = require('through2')
 var filter = require('filter-object')
 var extend = require('extend')
 
-var errorResponse = require('../lib/error-response')
+var errorResponse = require('../../lib/error-response')
 
-module.exports = function (model, options) {
+module.exports = function (comments, options) {
   var handler = {}
 
   handler.index = function (req, res, options) {
-    server.authorize(req, res, function (authError, authAccount) {
-      var notAuthorized = (authError || !authAccount)
+    if (req.method === 'GET') {
+      comments.find('post', options.params.postkey)
+        .pipe(JSONStream.stringify())
+        .pipe(res)
+    }
 
-      if (req.method === 'GET') {
-        server.comments.find('post', options.params.postkey)
-          .pipe(JSONStream.stringify())
-          .pipe(res)
-      }
-
-      if (req.method === 'POST') {
-        if (notAuthorized) return errorResponse(res, 401, 'Not Authorized')
-
-        jsonBody(req, res, function (err, body) {
-          server.comments.create(body, function (err, comment) {
-            if (err) return errorResponse(res, 500, 'Server error')
-            return response().json(comment).pipe(res)
-          })
+    if (req.method === 'POST') {
+      jsonBody(req, res, function (err, body) {
+        comments.create(body, function (err, comment) {
+          if (err) return errorResponse(res, 400, 'Error creating comment')
+          return response().json(comment).pipe(res)
         })
-      }
-    })
+      })
+    }
   }
 
   handler.item = function (req, res, options) {
-    server.authorize(req, res, function (authError, authAccount) {
-      var notAuthorized = (authError || !authAccount)
+    if (req.method === 'GET') {
+      comments.get(options.params.key, function (err, comment) {
+        if (err) return errorResponse(res, 400, 'Error creating comment')
 
-      if (req.method === 'GET') {
-        server.comments.get(options.params.key, function (err, comment) {
-          if (err) return errorResponse(res, 500, 'Server error')
+        return response().json(comment).pipe(res)
+      })
+    }
 
+    if (req.method === 'PUT') {
+      jsonBody(req, res, function (err, body) {
+        comments.update(options.params.key, body, function (err, comment) {
+          if (err) return errorResponse(res, 400, 'Error creating comment')
           return response().json(comment).pipe(res)
         })
-      }
+      })
+    }
 
-      if (req.method === 'PUT') {
-        if (notAuthorized) return errorResponse(res, 401, 'Not Authorized')
-
-        jsonBody(req, res, function (err, body) {
-          server.comments.update(options.params.key, body, function (err, comment) {
-            if (err) return errorResponse(res, 500, 'Server error')
-            return response().json(comment).pipe(res)
-          })
-        })
-      }
-
-      if (req.method === 'DELETE') {
-        if (notAuthorized) return errorResponse(res, 401, 'Not Authorized')
-
-        server.comments.delete(options.params.key, function (err) {
-          if (err) return errorResponse(res, 500, 'Server error')
-          res.writeHead(204)
-          return res.end()
-        })
-      }
-    })
+    if (req.method === 'DELETE') {
+      comments.delete(options.params.key, function (err) {
+        if (err) return errorResponse(res, 400, 'Error creating comment')
+        res.writeHead(204)
+        return res.end()
+      })
+    }
   }
 
   return handler

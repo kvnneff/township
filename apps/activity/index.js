@@ -5,6 +5,7 @@ module.exports = function (db, options) {
 
   return {
     name: 'activity',
+    schema: model.schema,
     model: model,
     handler: handler,
     routes: routes,

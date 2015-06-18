@@ -12,7 +12,7 @@
     "bundle-css": "sheetify browser/css/style.css | cssnext | cleancss > assets/bundle.css",
     "bundle": "npm run bundle-css && npm run bundle-js",
     "test": "tape apps/**/tests/*.js | tap-spec",
-    "start": "node example.js"
+    "start": "node app.js"
   },
   "browser": {
     "request": "xhr"

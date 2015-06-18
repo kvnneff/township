@@ -6,6 +6,7 @@ module.exports = function (db, options) {
   return {
     name: 'profiles',
     model: model,
+    schema: model.schema,
     handler: handler,
     routes: routes,
     serve: function (req, res) {
