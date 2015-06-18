@@ -3,8 +3,7 @@ var each = require('each-async')
 
 var levelup = require('levelup')
 var db = levelup('db', { db: require('memdown') })
-
-var posts = require('../lib/posts')(db)
+var posts = require('../model')(db)
 
 test('create a post', function (t) {
   var data = {
@@ -21,7 +20,7 @@ test('create a post', function (t) {
 })
 
 test('create multiple posts', function (t) {
-  var data = require('./data/posts')
+  var data = require('./fixtures/posts')
 
   each(data, function (post, i, next) {
     posts.create(post, function (err, action) {

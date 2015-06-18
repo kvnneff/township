@@ -3,8 +3,7 @@ var each = require('each-async')
 
 var levelup = require('levelup')
 var db = levelup('db', { db: require('memdown') })
-
-var activity = require('../lib/activity')(db)
+var activity = require('../model')(db)
 
 test('create an activity', function (t) {
   var data = {
@@ -23,7 +22,7 @@ test('create an activity', function (t) {
 })
 
 test('create sample activity data', function (t) {
-  var data = require('./data/activity')
+  var data = require('./fixtures/activity')
 
   each(data, function (action, i, next) {
     activity.put(action, function (err, action) {

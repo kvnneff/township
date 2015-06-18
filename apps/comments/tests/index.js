@@ -3,8 +3,7 @@ var each = require('each-async')
 
 var levelup = require('levelup')
 var db = levelup('db', { db: require('memdown') })
-
-var comments = require('../lib/comments')(db)
+var comments = require('../model')(db)
 
 test('create a comment', function (t) {
   var data = {

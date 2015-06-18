@@ -1,7 +1,6 @@
 var qs = require('querystring')
 var response = require('response')
 var JSONStream = require('JSONStream')
-var format = require('json-format-stream')
 var jsonBody = require('body/json')
 var through = require('through2')
 var filter = require('filter-object')
@@ -9,16 +8,15 @@ var extend = require('extend')
 
 var errorResponse = require('../lib/error-response')
 
-module.exports = function (server) {
-  var prefix = '/api/v1.0/'
+module.exports = function (model, options) {
+  var handler = {}
 
-  server.router.on(prefix + '/comments', function (req, res, options) {
-    console.log(options)
+  handler.index = function (req, res, options) {
     server.authorize(req, res, function (authError, authAccount) {
       var notAuthorized = (authError || !authAccount)
 
       if (req.method === 'GET') {
-        server.comments.find('post', options.params.postkey)
+        server.posts.createReadStream()
           .pipe(JSONStream.stringify())
           .pipe(res)
       }
@@ -27,25 +25,24 @@ module.exports = function (server) {
         if (notAuthorized) return errorResponse(res, 401, 'Not Authorized')
 
         jsonBody(req, res, function (err, body) {
-          server.comments.create(body, function (err, comment) {
+          server.posts.create(body, function (err, post) {
             if (err) return errorResponse(res, 500, 'Server error')
-            return response().json(comment).pipe(res)
+            return response().json(post).pipe(res)
           })
         })
       }
     })
-  })
+  }
 
-  server.router.on(prefix + '/comments/:key', function (req, res, options) {
-    console.log(options)
+  handler.item = function (req, res, options) {
     server.authorize(req, res, function (authError, authAccount) {
       var notAuthorized = (authError || !authAccount)
 
       if (req.method === 'GET') {
-        server.comments.get(options.params.key, function (err, comment) {
+        server.posts.get(options.params.key, function (err, post) {
           if (err) return errorResponse(res, 500, 'Server error')
 
-          return response().json(comment).pipe(res)
+          return response().json(post).pipe(res)
         })
       }
 
@@ -53,9 +50,9 @@ module.exports = function (server) {
         if (notAuthorized) return errorResponse(res, 401, 'Not Authorized')
 
         jsonBody(req, res, function (err, body) {
-          server.comments.update(options.params.key, body, function (err, comment) {
+          server.posts.update(options.params.key, body, function (err, post) {
             if (err) return errorResponse(res, 500, 'Server error')
-            return response().json(comment).pipe(res)
+            return response().json(post).pipe(res)
           })
         })
       }
@@ -63,12 +60,14 @@ module.exports = function (server) {
       if (req.method === 'DELETE') {
         if (notAuthorized) return errorResponse(res, 401, 'Not Authorized')
 
-        server.comments.delete(options.params.key, function (err) {
+        server.posts.delete(options.params.key, function (err) {
           if (err) return errorResponse(res, 500, 'Server error')
           res.writeHead(204)
           return res.end()
         })
       }
     })
-  })
+  }
+  
+  return handler
 }

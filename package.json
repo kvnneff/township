@@ -11,7 +11,7 @@
     "bundle-js": "browserify browser/js/index.js -o assets/bundle.js",
     "bundle-css": "sheetify browser/css/style.css | cssnext | cleancss > assets/bundle.css",
     "bundle": "npm run bundle-css && npm run bundle-js",
-    "test": "tape tests/*.js | tap-spec",
+    "test": "tape apps/**/tests/*.js | tap-spec",
     "start": "node example.js"
   },
   "browser": {

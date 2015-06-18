@@ -8,10 +8,10 @@ var extend = require('extend')
 
 var errorResponse = require('../lib/error-response')
 
-module.exports = function (server) {
-  var prefix = '/api/v1.0/'
+module.exports = function (model, options) {
+  var handler = {}
 
-  server.router.on(prefix + '/activity', function (req, res, options) {
+  handler.index = function (req, res, options) {
     server.authorize(req, res, function (authError, authAccount) {
       var notAuthorized = (authError || !authAccount)
 
@@ -38,9 +38,9 @@ module.exports = function (server) {
         })
       }
     })
-  })
+  }
 
-  server.router.on(prefix + '/activity/:key', function (req, res, options) {
+  handler.item = function (req, res, options) {
     server.authorize(req, res, function (authError, authAccount) {
       var notAuthorized = (authError || !authAccount)
 
@@ -60,5 +60,7 @@ module.exports = function (server) {
         })
       }
     })
-  })
+  }
+
+  return handler
 }
