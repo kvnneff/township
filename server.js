@@ -12,7 +12,7 @@
 var level = require('level')
 var db = level(__dirname + '/db')
 
-var app = require('./lib/index')(db, {
+var server = require('./lib/index')(db, {
   apps: [
     require('./apps/activity')(db, {}),
     require('./apps/comments')(db, {}),
@@ -21,6 +21,6 @@ var app = require('./lib/index')(db, {
   ]
 })
 
-app.add(require('./apps/schema')(app, {}))
+server.add(require('./apps/schema')(server, {}))
 
-app.listen()
+server.listen()
