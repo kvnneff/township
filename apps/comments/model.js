@@ -9,6 +9,7 @@ function Comments (db, options) {
   if (!(this instanceof Comments)) return new Comments(db, options)
 
   options = extend(options || {}, {
+    modelName: 'comments',
     properties: {
       post: { type: 'string' },
       content: { type: 'string' },

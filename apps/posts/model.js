@@ -11,6 +11,7 @@ function Posts (db, options) {
 
   options = extend(options || {}, {
     properties: {
+      modelName: 'posts',
       title: { type: 'string' },
       url: { type: 'string' },
       slug: { type: 'string' },
@@ -22,7 +23,7 @@ function Posts (db, options) {
     indexKeys: ['tags', 'slug', 'account'],
     required: ['title', 'url', 'account']
   })
-
+  
   this.comments = comments(db)
   Model.call(this, db, options)
 }

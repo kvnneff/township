@@ -14,13 +14,13 @@ var db = level(__dirname + '/db')
 
 var server = require('./lib/index')(db, {
   apps: [
-    require('./apps/activity')(db, {}),
-    require('./apps/comments')(db, {}),
-    require('./apps/posts')(db, {}),
-    require('./apps/profiles')(db, {})
+    require('./apps/activity')(db),
+    require('./apps/comments')(db),
+    require('./apps/posts')(db),
+    require('./apps/profiles')(db)
   ]
 })
 
-server.add(require('./apps/schema')(server, {}))
+server.add(require('./apps/schema')(server))
 
 server.listen()

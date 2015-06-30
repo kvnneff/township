@@ -1,4 +1,5 @@
 module.exports = function (db, options) {
+  options = options || {}
   var model = require('./model')(db, options)
   var handler = require('./handler')(model, options)
   var routes = require('./routes')(handler, options)

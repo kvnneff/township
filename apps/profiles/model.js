@@ -10,6 +10,7 @@ function Profiles (db, options) {
   if (!(this instanceof Profiles)) return new Profiles(db, options)
 
   options = extend(options || {}, {
+    modelName: 'profiles',
     properties: {
       account: { type: 'string' },
       username: { type: 'string' },

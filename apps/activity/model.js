@@ -9,6 +9,7 @@ function Activity (db, options) {
   if (!(this instanceof Activity)) return new Activity(db, options)
 
   options = extend(options || {}, {
+    modelName: 'activity',
     properties: {
       action: { type: 'string' },
       resource: { type: 'string' },
