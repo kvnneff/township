@@ -21,6 +21,8 @@ module.exports = function (posts, options) {
     if (req.method === 'POST') {
       jsonBody(req, res, function (err, body) {
         posts.create(body, function (err, post) {
+          console.log(body)
+          console.log(err, post)
           if (err) return errorResponse(res, 400, 'Error creating post')
           return response().json(post).pipe(res)
         })

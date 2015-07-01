@@ -10,20 +10,21 @@ function Posts (db, options) {
   if (!(this instanceof Posts)) return new Posts(db, options)
 
   options = extend(options || {}, {
+    modelName: 'posts',
     properties: {
-      modelName: 'posts',
-      title: { type: 'string' },
-      url: { type: 'string' },
-      slug: { type: 'string' },
-      tags: { type: 'array' },
-      account: { type: 'string' },
-      media: { type: 'array' },
-      metadata: { type: 'object' }
+      title: { type: ['string', 'null'], default: null },
+      body: { type: ['string', 'null'], default: null },
+      url: { type: ['string', 'null'], default: null },
+      slug: { type: ['string', 'null'], default: null },
+      tags: { type: 'array', default: [] },
+      account: { type: ['string', 'null'], default: null },
+      media: { type: 'array', default: [] },
+      metadata: { type: 'object', default: {} }
     },
     indexKeys: ['tags', 'slug', 'account'],
-    required: ['title', 'url', 'account']
+    required: ['account']
   })
-  
+
   this.comments = comments(db)
   Model.call(this, db, options)
 }

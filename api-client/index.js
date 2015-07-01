@@ -10,16 +10,17 @@ module.exports = TownshipClient
 
 function TownshipClient (options) {
   if (!(this instanceof TownshipClient)) return new TownshipClient(options)
-
   options = options || {}
 
-  this.account = {
-    username: options.username,
-    password: options.password
+  if (options.username && options.password) {
+    this.account = {
+      username: options.username,
+      password: options.password
+    }
   }
 
   this.host = options.host || 'https://127.0.0.1:4243'
-  this.apiVersion = options.apiVersion || '/v1.0/'
+  this.apiVersion = options.apiVersion || '/v1/'
 
   this.accounts = require('./accounts')(this)
   this.activity = require('./activity')(this)
@@ -39,23 +40,27 @@ TownshipClient.prototype.request = function (method, path, params, cb) {
   if (method === 'get') {
     params = qs.stringify(params)
     options.uri = this.fullUrl(path, params)
+    options.json = true
   }
 
   else {
     options.uri = this.fullUrl(path)
-    options.body = params
+    options.json = options.body = params
   }
 
-  options.json = true
   options.method = method
-  options.headers = {
-    'Authorization': this.account.username + ':' + this.account.password
+  
+  if (this.account) {
+    options.headers = {
+      'Authorization': this.account.username + ':' + this.account.password
+    }
   }
 
   if (typeof cb === 'undefined') return request(options)
   else request(options, getResponse)
-
+  console.log(options)
   function getResponse (error, response, body) {
+    console.log(response)
     if (cb) {
       if (error) return cb(error)
       if (response.statusCode >= 400) return cb({ error: { status: response.statusCode } })
