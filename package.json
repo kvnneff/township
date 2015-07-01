@@ -24,7 +24,7 @@
     "accountdown-model": "^1.0.0",
     "basscss-grid": "^1.0.2",
     "body": "^4.5.0",
-    "clicloptions": "^1.1.0",
+    "cliclopts": "^1.1.0",
     "clone": "^1.0.2",
     "colors.css": "^2.3.0",
     "cookie-auth": "^2.4.1",
