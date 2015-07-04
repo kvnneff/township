@@ -12,15 +12,32 @@
 var level = require('level')
 var db = level(__dirname + '/db')
 
+var activity = require('./apps/activity')(db)
+var posts = require('./apps/discuss/posts')(db),
+var comments = require('./apps/discuss/comments')(db),
+var accounts = require('./apps/accounts')(db)
+var profiles = require('./apps/profiles')(db)
+
 var server = require('./lib/index')(db, {
-  apps: [
-    require('./apps/activity')(db),
-    require('./apps/discuss/posts')(db),
-    require('./apps/discuss/comments')(db),
-    require('./apps/profiles')(db)
-  ]
+  apps: [activity, posts, comments, accounts, profiles]
 })
 
-server.add(require('./apps/schema')(server))
+accounts.on('create', function (account) {
+  profiles.create(account, function (err, profile) {
+    console.log(err, profile)
+  })
+})
+
+accounts.on('update', function (account) {
+  profiles.update(account, function (err, profile) {
+    console.log(err, profile)
+  })
+})
+
+accounts.on('delete', function (account) {
+  profiles.delete(account, function (err, profile) {
+    console.log(err, profile)
+  })
+})
 
 server.listen()

@@ -2,8 +2,7 @@ var test = require('tape')
 var each = require('each-async')
 var cuid = require('cuid')
 
-var levelup = require('levelup')
-var db = levelup('db', { db: require('memdown') })
+var db = require('memdb')()
 var accounts = require('../model')(db)
 
 test('create an account', function (t) {

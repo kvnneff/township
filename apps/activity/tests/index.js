@@ -1,8 +1,7 @@
 var test = require('tape')
 var each = require('each-async')
 
-var levelup = require('levelup')
-var db = levelup('db', { db: require('memdown') })
+var db = require('memdb')()
 var activity = require('../model')(db)
 
 test('create an activity', function (t) {

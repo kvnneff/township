@@ -1,8 +1,7 @@
 var test = require('tape')
 var each = require('each-async')
 
-var levelup = require('levelup')
-var db = levelup('db', { db: require('memdown') })
+var db = require('memdb')()
 var accounts = require('../../accounts/model')(db)
 
 var profiles = require('../model')(db, accounts)
@@ -41,9 +40,7 @@ test('get a profile', function (t) {
   }
 
   profiles.findOne('username', data.username, function (err, profile) {
-    console.log("profile.test: get profile, err:", err)
     t.notOk(err)
-    console.log("profile.test: get profile:", profile)
     t.ok(profile)
     t.end()
   })

@@ -58,9 +58,8 @@ TownshipClient.prototype.request = function (method, path, params, cb) {
 
   if (typeof cb === 'undefined') return request(options)
   else request(options, getResponse)
-  console.log(options)
+
   function getResponse (error, response, body) {
-    console.log(response)
     if (cb) {
       if (error) return cb(error)
       if (response.statusCode >= 400) return cb({ error: { status: response.statusCode } })
