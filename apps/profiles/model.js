@@ -1,7 +1,6 @@
 var Model = require('level-model')
 var inherits = require('inherits')
 var extend = require('extend')
-var comments = require('../comments/model')
 
 module.exports = Profiles
 inherits(Profiles, Model)
@@ -25,7 +24,6 @@ function Profiles (db, options) {
     required: ['account', 'username', 'email']
   })
 
-  this.comments = comments(db)
   Model.call(this, db, options)
 }
 

@@ -13,7 +13,7 @@ function Posts (db, options) {
     modelName: 'posts',
     properties: {
       title: { type: ['string', 'null'], default: null },
-      body: { type: ['string', 'null'], default: null },
+      content: { type: ['string', 'null'], default: null },
       url: { type: ['string', 'null'], default: null },
       slug: { type: ['string', 'null'], default: null },
       tags: { type: 'array', default: [] },

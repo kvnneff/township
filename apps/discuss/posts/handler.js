@@ -6,7 +6,7 @@ var through = require('through2')
 var filter = require('filter-object')
 var extend = require('extend')
 
-var errorResponse = require('../../lib/error-response')
+var errorResponse = require('../../../lib/error-response')
 
 module.exports = function (posts, options) {
   var handler = {}
