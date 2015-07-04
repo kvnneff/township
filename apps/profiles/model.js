@@ -5,8 +5,8 @@ var extend = require('extend')
 module.exports = Profiles
 inherits(Profiles, Model)
 
-function Profiles (db, options) {
-  if (!(this instanceof Profiles)) return new Profiles(db, options)
+function Profiles (db, accounts, options) {
+  if (!(this instanceof Profiles)) return new Profiles(db, accounts, options)
 
   options = extend(options || {}, {
     modelName: 'profiles',
@@ -84,3 +84,24 @@ Profiles.prototype.unblock = function (key, unblockedKey,  cb) {
     })
   })
 }
+
+//Profiles.prototype.beforeCreate = function (data) {
+//  this.accounts.create(data)
+//  return data
+//}
+
+//Profiles.prototype.get = function (key, unblockedKey,  cb) {
+//  this.accounts.findOne(key)
+//}
+
+//Profiles.prototype.put = function (key, unblockedKey,  cb) {
+//  var self = this
+//  this.get(key, function (err, active) {
+//    if (err) return cb(err)
+//    delete active.blocked[unblockedKey]
+//    self.update(key, active, function (err) {
+//      if (err) return cb(err)
+//      cb()
+//    })
+//  })
+//}
