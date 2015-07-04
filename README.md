@@ -2,6 +2,8 @@
 
 > Community management for journalists & organizers.
 
+[![Build Status](https://travis-ci.org/civicmakerlab/township.svg?branch=master)](https://travis-ci.org/civicmakerlab/township)
+
 ## Status
 
 This is an experiment, a work in progress, an early prototype for a tool that news publishers and/or community organizers might use for managing communities.
