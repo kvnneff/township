@@ -14,10 +14,16 @@ function Comments (db, options) {
       post: { type: 'string' },
       content: { type: 'string' },
       account: { type: 'string' },
-      replyTo: { type: 'string' }
+      replyTo: { 
+        type: 'object',
+        properties: {
+          type: 'string',
+          key: 'string'
+        }
+      }
     },
     indexKeys: ['post', 'account', 'replyTo'],
-    required: ['post', 'content', 'account']
+    required: ['post', 'content', 'account', 'replyTo']
   })
 
   Model.call(this, db, options)

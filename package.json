@@ -41,8 +41,6 @@
     "jsonwebtoken": "^5.0.2",
     "level": "^1.2.0",
     "level-model": "^1.4.1",
-    "level-party": "^2.1.1",
-    "levelup": "^0.19.0",
     "marked": "^0.3.3",
     "match-routes": "^1.1.0",
     "minimist": "^1.1.1",

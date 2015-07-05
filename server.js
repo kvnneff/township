@@ -13,8 +13,8 @@ var level = require('level')
 var db = level(__dirname + '/db')
 
 var activity = require('./apps/activity')(db)
-var posts = require('./apps/discuss/posts')(db),
-var comments = require('./apps/discuss/comments')(db),
+var posts = require('./apps/discuss/posts')(db)
+var comments = require('./apps/discuss/comments')(db)
 var accounts = require('./apps/accounts')(db)
 var profiles = require('./apps/profiles')(db)
 
@@ -22,20 +22,20 @@ var server = require('./lib/index')(db, {
   apps: [activity, posts, comments, accounts, profiles]
 })
 
-accounts.on('create', function (account) {
-  profiles.create(account, function (err, profile) {
+accounts.model.on('create', function (account) {
+  profiles.model.create(account, function (err, profile) {
     console.log(err, profile)
   })
 })
 
-accounts.on('update', function (account) {
-  profiles.update(account, function (err, profile) {
+accounts.model.on('update', function (account) {
+  profiles.model.update(account, function (err, profile) {
     console.log(err, profile)
   })
 })
 
-accounts.on('delete', function (account) {
-  profiles.delete(account, function (err, profile) {
+accounts.model.on('delete', function (account) {
+  profiles.model.delete(account, function (err, profile) {
     console.log(err, profile)
   })
 })
