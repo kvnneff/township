@@ -15,7 +15,7 @@ test('create an account', function (t) {
     password: 'wat'
   }
 
-  client.accounts.create(account, function (err, res) {
+  client.model.create(account, function (err, res) {
     t.ok(res)
     t.notOk(err)
     t.end()
@@ -30,12 +30,12 @@ test('update an account', function (t) {
     password: 'wat'
   }
 
-  client.accounts.create(account, function (err, res) {
+  client.model.create(account, function (err, res) {
     t.ok(res)
     t.notOk(err)
     res.email = 'wooo@example.com'
     
-    client.accounts.update(res.username, res, function (err, updated) {
+    client.model.update(res.username, res, function (err, updated) {
       t.notOk(err)
       t.ok(updated.email === 'wooo@example.com')
       t.end()
@@ -46,7 +46,7 @@ test('update an account', function (t) {
 
 
 test('get list of accounts', function (t) {
-  client.accounts.list(function (err, res) {
+  client.model.list(function (err, res) {
     t.ok(res)
     t.notOk(err)
     t.end()
@@ -55,7 +55,7 @@ test('get list of accounts', function (t) {
 
 
 test('get list of admin accounts', function (t) {
-  client.accounts.list({ admin: true }, function (err, res) {
+  client.model.list({ admin: true }, function (err, res) {
     t.ok(res)
     t.notOk(err)
     t.end()
@@ -64,13 +64,13 @@ test('get list of admin accounts', function (t) {
 
 
 test('teardown', function (t) {
-  client.accounts.list(function (err, res) {
+  client.model.list(function (err, res) {
     each(res, iterator, end)
       
     function iterator (item, i, done) {
       if (item.username === 'pizza') return done()
 
-      client.accounts.delete(item.username, function (err) {
+      client.model.delete(item.username, function (err) {
         t.notOk(err, 'no error when deleting account')
         done()
       })

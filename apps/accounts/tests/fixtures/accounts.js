@@ -2,8 +2,8 @@ var cuid = require('cuid')
 
 module.exports = [
   {
-    login: { basic: { key: cuid(), password: 'test' } },
-    value: { username: 'test', email: 'test@example.com'}
+    login: { basic: { key: cuid(), password: 'testPassword' } },
+    value: { username: 'testUsername', email: 'test@example.com'}
   },
   {
     login: { basic: { key: cuid(), password: 'example' } },
