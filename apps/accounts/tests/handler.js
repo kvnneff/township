@@ -1,5 +1,4 @@
 var test = require('tape')
-var fs = require('fs');
 var each = require('each-async')
 var hammock = require('hammock')
 var isEqual = require('is-equal');
@@ -13,20 +12,45 @@ var secret = 's3cr3t_Pa55w0rd'
 var accountsHandler = require('../handler')(accountsModel, { secret: secret })
 
 // Make a request to get the initial token
-var req = hammock.Request({
+var request = hammock.Request({
   method: 'GET',
   headers: {
     'content-type': 'application/json'
   },
   url: '/somewhere'
 })
-req.end()
-var res = hammock.Response()
+request.end()
 var payload = { username: "joeblow", admin: true }
-res.end()
-var tokens = require('../../../lib/tokens')(secret)
-var token = tokens.sign(req, payload)
 
+var token = accountsHandler.tokens.sign(request, payload)
+
+
+test('verify sign in', function (t) {
+  var response = hammock.Response()
+  accountsHandler.verify(request, response)
+  t.end()
+})
+
+test('invalid sign in verification', function (t) {
+  var request = hammock.Request({
+    method: 'GET',
+    headers: {
+      'content-type': 'application/json'
+    },
+    url: '/somewhere'
+  })
+  // NO Token is set, so this auth should fail!
+  request.end('thisbody')
+
+  var response = hammock.Response()
+
+  accountsHandler.index(request, response)
+  response.on('end', function (err, data) {
+    t.ifError(err)
+    t.true(401 === data.statusCode)
+    t.end()
+  });
+})
 
 test('get a list of accounts', function (t) {
   var accountsFixture = JSON.parse(JSON.stringify(require('./fixtures/accounts.js')))
@@ -59,19 +83,74 @@ test('get a list of accounts', function (t) {
   })
 })
 
+test('auth sign in to existing account', function (t) {
+  var accountsFixture = JSON.parse(JSON.stringify(require('./fixtures/accounts.js')))
+  var accountToAuth = accountsFixture[0]
+  var creds = { username: accountToAuth.value.username,
+    password: accountToAuth.login.basic.passowrd }
+  var request = hammock.Request({
+    method: 'GET',
+    headers: {
+      'content-type': 'application/json',
+      'authorization': '' + creds.username + ":" + creds.password
+    },
+    url: '/somewhere'
+  })
+  //console.log("request:", request)
+  request.end('thisbody')
+
+  var response = hammock.Response()
+  accountsHandler.auth(request, response, function (err, response) {
+    t.ifError(err)
+
+    response.on('end', function (err, data) {
+      t.ifError(err)
+      t.true(200 === data.statusCode)
+      // TODO: Check that we have the right auth token
+      // TODO: data.body cannot be properly compared due to bug in npm's hammock
+      // that causes the body to be repeated twice when it is piped into the response:
+      // https://github.com/tommymessbauer/hammock/issues/15
+      t.end()
+    });
+  })
+})
+
+test('invalid auth sign in', function (t) {
+  //var creds = { username: accountToAuth.value.username,
+  //  password: accountToAuth.login.basic.passowrd }
+  var request = hammock.Request({
+    method: 'GET',
+    headers: {
+      'content-type': 'application/json',
+      'authorization': 'fakename:doesnotexist'
+    },
+    url: '/somewhere'
+  })
+  request.end('thisbody')
+
+  var response = hammock.Response()
+  accountsHandler.auth(request, response, function (err, response) {
+    t.ok(err)
+    response.on('end', function (err, data) {
+      t.ifError(err)
+      t.true(401 === data.statusCode)
+      t.end()
+    });
+  })
+})
 
 test('delete a single account as non-admin', function (t) {
-  req = hammock.Request({
+  request = hammock.Request({
     method: 'GET',
     headers: {
       'content-type': 'application/json'
     },
     url: '/somewhere'
   })
-  req.end()
+  request.end()
   res = hammock.Response()
   payload = { username: "joeblow" }
-  var nonAdminToken = tokens.sign(req, payload)
+  var nonAdminToken = accountsHandler.tokens.sign(request, payload)
   res.end()
 
   var accountsFixture = JSON.parse(JSON.stringify(require('./fixtures/accounts.js')))
@@ -161,6 +240,9 @@ test('GET an account', function (t) {
   response.on('end', function (err, data) {
     t.ifError(err)
     t.true(200 === data.statusCode)
+    // TODO: data.body cannot be properly compared due to bug in npm's hammock
+    // that causes the body to be repeated twice when it is piped into the response:
+    // https://github.com/tommymessbauer/hammock/issues/15
     t.end()
   })
 })
@@ -184,6 +266,9 @@ test('PUT an account', function (t) {
   response.on('end', function (err, data) {
     t.ifError(err)
     t.true(200 === data.statusCode)
+    // TODO: data.body cannot be properly compared due to bug in npm's hammock
+    // that causes the body to be repeated twice when it is piped into the response:
+    // https://github.com/tommymessbauer/hammock/issues/15
     t.end()
   })
 })
