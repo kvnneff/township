@@ -1,6 +1,5 @@
 var qs = require('querystring')
 var request = require('request')
-var Upload = require('component-upload')
 
 /*
 * Replace TownshipClient with name of your app
@@ -83,27 +82,19 @@ TownshipClient.prototype.fullUrl = function fullUrl (path, params) {
  * @param  {Function} cb     Callback
  */
 TownshipClient.prototype.upload = function upload (method, path, params, cb) {
-  var filesLength = params.files.length
   var url = this.fullUrl(path)
-  var completedFiles = []
+  var body = new FormData
 
-  function done() {
-    return cb(null, completedFiles)
-  }
+  params.files.forEach(function (file, index) {
+    body.append(index.toString, file)
+  });
 
-  params.files.forEach(function (file) {
-    var upload = Upload(file)
-
-    upload.on('err', function (err) {
-      return cb(err)
-    })
-
-    upload.on('end', function (response) {
-      if (response.statusCode >= 400) return cb({error: { status: response.statusCode } })
-      completedFiles.push(JSON.parse(response.responseText)[0])
-      if (completedFiles.length === filesLength) return done()
-    })
-
-    upload.to(url)
+  request({
+      method: method || 'POST',
+      url: url,
+      body: body
+  }, function (err, response, body) {
+    if (response.statusCode >= 400) return cb({error: { status: response.statusCode } })
+    return cb(null, JSON.parse(body))
   })
 }
