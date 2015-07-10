@@ -34,7 +34,7 @@ TownshipClient.prototype.request = function (method, path, params, cb) {
     cb = params
     params = {}
   }
-  
+
   var options = {}
 
   if (method === 'get') {
@@ -49,7 +49,7 @@ TownshipClient.prototype.request = function (method, path, params, cb) {
   }
 
   options.method = method
-  
+
   if (this.account) {
     options.headers = {
       'Authorization': this.account.username + ':' + this.account.password
@@ -65,11 +65,23 @@ TownshipClient.prototype.request = function (method, path, params, cb) {
       if (response.statusCode >= 400) return cb({ error: { status: response.statusCode } })
       return cb(null, body)
     }
-  }  
+  }
 }
 
 TownshipClient.prototype.fullUrl = function fullUrl (path, params) {
   var url = this.host + '/api' + this.apiVersion + path + '/'
   if (params) url += '?' + params
   return url
+}
+
+/**
+ * Use this to plug in new handlers
+ * @param {Object} opts Options
+ * @param {String} opts.name Name to use for the new handler
+ * @param {Function} opts.handler The new handler
+ * @api public
+ */
+TownshipClient.prototype.add = function add (opts) {
+  this[opts.name] = opts.handler(this)
+  return this
 }
