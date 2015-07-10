@@ -1,6 +1,6 @@
 var qs = require('querystring')
 var request = require('request')
-
+var Upload = require('component-upload')
 
 /*
 * Replace TownshipClient with name of your app
@@ -34,7 +34,7 @@ TownshipClient.prototype.request = function (method, path, params, cb) {
     cb = params
     params = {}
   }
-  
+
   var options = {}
 
   if (method === 'get') {
@@ -49,7 +49,7 @@ TownshipClient.prototype.request = function (method, path, params, cb) {
   }
 
   options.method = method
-  
+
   if (this.account) {
     options.headers = {
       'Authorization': this.account.username + ':' + this.account.password
@@ -65,11 +65,45 @@ TownshipClient.prototype.request = function (method, path, params, cb) {
       if (response.statusCode >= 400) return cb({ error: { status: response.statusCode } })
       return cb(null, body)
     }
-  }  
+  }
 }
 
 TownshipClient.prototype.fullUrl = function fullUrl (path, params) {
   var url = this.host + '/api' + this.apiVersion + path + '/'
   if (params) url += '?' + params
   return url
+}
+
+/**
+ * Upload File objects taken from a FileList
+ * @param  {String}   method Must be either `POST` (default) or `PUT`
+ * @param  {String}   path   Path to upload endpoint
+ * @param  {Object}   params Parameters object
+ * @param  {Array}    params.files Array of File objects
+ * @param  {Function} cb     Callback
+ */
+TownshipClient.prototype.upload = function upload (method, path, params, cb) {
+  var filesLength = params.files.length
+  var url = this.fullUrl(path)
+  var completedFiles = []
+
+  function done() {
+    return cb(null, completedFiles)
+  }
+
+  params.files.forEach(function (file) {
+    var upload = Upload(file)
+
+    upload.on('err', function (err) {
+      return cb(err)
+    })
+
+    upload.on('end', function (response) {
+      if (response.statusCode >= 400) return cb({error: { status: response.statusCode } })
+      completedFiles.push(JSON.parse(response.responseText)[0])
+      if (completedFiles.length === filesLength) return done()
+    })
+
+    upload.to(url)
+  })
 }
