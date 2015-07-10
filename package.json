@@ -46,6 +46,7 @@
     "slug": "^0.8.0",
     "smokestack": "^3.2.2",
     "sqldown": "^1.2.0",
+    "st": "^0.5.4",
     "stream-collector": "^1.0.1",
     "subcommand": "^2.0.1",
     "subleveldown": "^1.0.6",
